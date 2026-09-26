@@ -10,26 +10,57 @@ public class GameForm extends JFrame
     public GameForm() 
     {
         initComponents();
+        
+        this.add(new GameArea(gameAreaCanvas, 10));
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        gameAreaCanvas = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 0, 0));
+        setFocusableWindowState(false);
+        setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        setPreferredSize(new java.awt.Dimension(640, 720));
+        setResizable(false);
+
+        gameAreaCanvas.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        gameAreaCanvas.setToolTipText("");
+        gameAreaCanvas.setPreferredSize(new java.awt.Dimension(320, 640));
+
+        javax.swing.GroupLayout gameAreaCanvasLayout = new javax.swing.GroupLayout(gameAreaCanvas);
+        gameAreaCanvas.setLayout(gameAreaCanvasLayout);
+        gameAreaCanvasLayout.setHorizontalGroup(
+            gameAreaCanvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 316, Short.MAX_VALUE)
+        );
+        gameAreaCanvasLayout.setVerticalGroup(
+            gameAreaCanvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 636, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(gameAreaCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(314, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(74, Short.MAX_VALUE)
+                .addComponent(gameAreaCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     public static void main(String args[]) {
@@ -55,5 +86,6 @@ public class GameForm extends JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel gameAreaCanvas;
     // End of variables declaration//GEN-END:variables
 }
