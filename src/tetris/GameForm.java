@@ -7,7 +7,7 @@ public class GameForm extends JFrame
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GameForm.class.getName());
 
-    public GameForm() 
+    public GameForm()   
     {
         initComponents();
         
