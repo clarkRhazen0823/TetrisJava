@@ -1,6 +1,11 @@
 package tetris;
 
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 public class GameForm extends JFrame 
 {
@@ -15,7 +20,57 @@ public class GameForm extends JFrame
         ga = new GameArea(gameAreaCanvas, 10);
         this.add( ga );
         
+        initControls();
+        
         startGame();
+    }
+    
+    private void initControls()
+    {
+        InputMap iMap = this.getRootPane().getInputMap();
+        ActionMap aMap = this.getRootPane().getActionMap();
+        
+        iMap.put(KeyStroke.getKeyStroke("RIGHT"), "right");
+        iMap.put(KeyStroke.getKeyStroke("LEFT"), "left");
+        iMap.put(KeyStroke.getKeyStroke("UP"), "up");
+        iMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
+        
+
+        
+        aMap.put("right", new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                System.out.println("Right");
+            }        
+        });
+        
+        aMap.put("left", new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                System.out.println("Left");
+            }        
+        });
+        
+        
+        aMap.put("up", new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                System.out.println("Up");
+            }        
+        });
+        
+        
+        aMap.put("down", new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                System.out.println("Down");
+            }        
+        });
+        
     }
     
     public void startGame()

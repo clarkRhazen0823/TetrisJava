@@ -19,7 +19,6 @@ public class GameThread extends Thread
             {
                 try 
                 {
-                    System.out.println("Playing TETRIS");
 
                     Thread.sleep(500);
                 } 
