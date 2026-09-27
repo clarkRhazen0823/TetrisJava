@@ -20,7 +20,7 @@ public class GameThread extends Thread
                 try 
                 {
 
-                    Thread.sleep(500);
+                    Thread.sleep(750);
                 } 
                 catch (InterruptedException ex) 
                 {

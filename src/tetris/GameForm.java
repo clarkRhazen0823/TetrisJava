@@ -27,21 +27,19 @@ public class GameForm extends JFrame
     
     private void initControls()
     {
-        InputMap iMap = this.getRootPane().getInputMap();
-        ActionMap aMap = this.getRootPane().getActionMap();
+        InputMap iMap = getRootPane().getInputMap();
+        ActionMap aMap = getRootPane().getActionMap();
         
         iMap.put(KeyStroke.getKeyStroke("RIGHT"), "right");
         iMap.put(KeyStroke.getKeyStroke("LEFT"), "left");
         iMap.put(KeyStroke.getKeyStroke("UP"), "up");
         iMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
         
-
-        
         aMap.put("right", new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println("Right");
+                ga.moveBlockRight();
             }        
         });
         
@@ -49,7 +47,7 @@ public class GameForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println("Left");
+                ga.moveBlockLeft();
             }        
         });
         
@@ -58,7 +56,7 @@ public class GameForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println("Up");
+                ga.rotateBlock();
             }        
         });
         
@@ -67,7 +65,7 @@ public class GameForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println("Down");
+                ga.dropBlock();
             }        
         });
         
@@ -86,9 +84,7 @@ public class GameForm extends JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
-        setFocusableWindowState(false);
         setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(640, 720));
         setResizable(false);
 
         gameAreaCanvas.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
