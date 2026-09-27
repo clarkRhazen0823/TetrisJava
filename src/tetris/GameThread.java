@@ -14,16 +14,19 @@ public class GameThread extends Thread
     {        
         while(true)
         {
-            try 
+            ga.spawnBlock();
+            while ( ga.moveBlockDown() )
             {
-                System.out.println("Playing TETRIS");
-            
-                ga.moveBlockDown();
-                Thread.sleep(1000);
-            } 
-            catch (InterruptedException ex) 
-            {
-                System.getLogger(GameThread.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                try 
+                {
+                    System.out.println("Playing TETRIS");
+
+                    Thread.sleep(500);
+                } 
+                catch (InterruptedException ex) 
+                {
+                    System.getLogger(GameThread.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
             }
         }
 
