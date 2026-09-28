@@ -12,9 +12,10 @@ public class GameArea extends JPanel
     private int gridColumns;
     private int gridCellSize;
     private Color[][] background;
+    private Random rdm = new Random();
     
+    private TetrisBlock nextBlock;
     private TetrisBlock block;
-    
     private TetrisBlock[] tetrominoes;
     
     public GameArea(JPanel placeholder, int columns)
@@ -35,8 +36,7 @@ public class GameArea extends JPanel
     
     public void spawnBlock()
     {
-        Random rdm = new Random();
-        block = tetrominoes[ rdm.nextInt( tetrominoes.length ) ];
+        block = tetrominoes[rdm.nextInt(tetrominoes.length)];
         block.spawn(gridColumns);
     }
     
@@ -84,26 +84,72 @@ public class GameArea extends JPanel
 
     }
     
-    public void dropBlock()
+    public boolean hardDrop()
     {
-        if (block == null) return;
+        if (block == null) return false;
+        
         while(checkBottom())
         {
             block.moveDown();
         }
         
+        moveBlockToBackground();
         repaint();
+        
+        return true;
     }    
     
     public void rotateBlock()
     {
         if (block == null) return;
+
+        int oldX = block.getX();
+        int oldY = block.getY();
+
         block.rotate();
-        
-        if(block.getLeftEdge() < 0) block.setX(0);
-        if(block.getRightEdge() >= gridColumns) block.setX( gridColumns - block.getWidth() );
-        if(block.getBottomEdge() >= gridRows) block.setY( gridRows - block.getHeight() );
-        
+
+        if(block.getLeftEdge() < 0)
+            block.setX(0);
+
+        if(block.getRightEdge() >= gridColumns)
+            block.setX(gridColumns - block.getWidth());
+
+        if(block.getBottomEdge() >= gridRows)
+            block.setY(gridRows - block.getHeight());
+
+        int[][] shape = block.getShape();
+        int w = block.getWidth();
+        int h = block.getHeight();
+
+        boolean collision = false;
+
+        for(int row = 0; row < h; row++)
+        {
+            for(int col = 0; col < w; col++)
+            {
+                if(shape[row][col] != 0)
+                {
+                    int x = col + block.getX();
+                    int y = row + block.getY();
+
+                    if(y >= 0 && background[y][x] != null)
+                    {
+                        collision = true;
+                    }
+                }
+            }
+        }
+
+        if(collision)
+        {
+            block.setX(oldX);
+            block.setY(oldY);
+
+            block.rotate();
+            block.rotate();
+            block.rotate();
+        }
+
         repaint();
     }
     
@@ -286,6 +332,57 @@ public class GameArea extends JPanel
         }
     }
     
+    private void drawGhost(Graphics g)
+    {
+        int ghostY = block.getY();
+
+        while (true)
+        {
+            boolean blocked = false;
+
+            for (int row = 0; row < block.getHeight(); row++)
+            {
+                for (int col = 0; col < block.getWidth(); col++)
+                {
+                    if (block.getShape()[row][col] != 0)
+                    {
+                        int x = block.getX() + col;
+                        int y = ghostY + row + 1;
+
+                        if (y >= gridRows || 
+                            (y >= 0 && background[y][x] != null))
+                        {
+                            blocked = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (blocked) break;
+            }
+
+            if (blocked) break;
+
+            ghostY++;
+        }
+
+        int[][] shape = block.getShape();
+
+        for (int row = 0; row < block.getHeight(); row++)
+        {
+            for (int col = 0; col < block.getWidth(); col++)
+            {
+                if (shape[row][col] != 0)
+                {
+                    int x = (block.getX() + col) * gridCellSize;
+                    int y = (ghostY + row) * gridCellSize;
+
+                    g.drawRect(x, y, gridCellSize, gridCellSize);
+                }
+            }
+        }
+    }
+    
     private void drawBackground(Graphics g)
     {
         Color color;
@@ -321,6 +418,7 @@ public class GameArea extends JPanel
         super.paintComponent(g);
         
         drawBackground(g);
+        drawGhost(g);
         drawBlock(g);
     }
 }

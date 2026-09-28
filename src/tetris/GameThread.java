@@ -27,7 +27,6 @@ public class GameThread extends Thread
             {
                 try 
                 {
-
                     Thread.sleep(tickRate);
                 } 
                 catch (InterruptedException ex) 
@@ -51,7 +50,7 @@ public class GameThread extends Thread
             {
                 level = lvl;
                 gf.updateLvl(level);
-                tickRate -= speedPerLvl;
+               if (tickRate > 100) tickRate -= speedPerLvl;
             }
         }
 

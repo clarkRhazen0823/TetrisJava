@@ -34,6 +34,7 @@ public class GameForm extends JFrame
         iMap.put(KeyStroke.getKeyStroke("A"), "left");
         iMap.put(KeyStroke.getKeyStroke("W"), "up");
         iMap.put(KeyStroke.getKeyStroke("S"), "down");
+        iMap.put(KeyStroke.getKeyStroke("SPACE"), "space");
         
         aMap.put("right", new AbstractAction(){
             @Override
@@ -65,7 +66,15 @@ public class GameForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                ga.dropBlock();
+                ga.moveBlockDown();
+            }        
+        });
+        
+        aMap.put("space", new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                ga.hardDrop();
             }        
         });
         
@@ -134,7 +143,7 @@ public class GameForm extends JFrame
         btnPause.setBackground(new java.awt.Color(51, 51, 51));
         btnPause.setForeground(new java.awt.Color(255, 255, 255));
         btnPause.setText("PAUSE");
-        btnPause.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 51, 51), 1, true));
+        btnPause.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
         btnPause.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPause.addActionListener(this::btnPauseActionPerformed);
 
