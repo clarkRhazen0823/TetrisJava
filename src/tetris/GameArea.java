@@ -2,7 +2,9 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
 import javax.swing.JPanel;
+import tetrominoes.*;
 
 public class GameArea extends JPanel
 {
@@ -12,6 +14,8 @@ public class GameArea extends JPanel
     private Color[][] background;
     
     private TetrisBlock block;
+    
+    private TetrisBlock[] tetrominoes;
     
     public GameArea(JPanel placeholder, int columns)
     {
@@ -25,11 +29,14 @@ public class GameArea extends JPanel
         gridRows = this.getBounds().height / gridCellSize; 
         
         background = new Color[gridRows][gridColumns];
+        
+        tetrominoes = new TetrisBlock[]{new IShape(), new JShape(), new LShape(), new OShape(), new SShape(), new TShape(), new ZShape()};
     }
     
     public void spawnBlock()
     {
-        block = new TetrisBlock( new int[][]{ {1, 0},{1, 0},{1, 1} }, Color.BLUE );
+        Random rdm = new Random();
+        block = tetrominoes[ rdm.nextInt( tetrominoes.length ) ];
         block.spawn(gridColumns);
     }
     
@@ -92,6 +99,11 @@ public class GameArea extends JPanel
     {
         if (block == null) return;
         block.rotate();
+        
+        if(block.getLeftEdge() < 0) block.setX(0);
+        if(block.getRightEdge() >= gridColumns) block.setX( gridColumns - block.getWidth() );
+        if(block.getBottomEdge() >= gridRows) block.setY( gridRows - block.getHeight() );
+        
         repaint();
     }
     
@@ -299,7 +311,7 @@ public class GameArea extends JPanel
     {
         g.setColor(color);
         g.fillRect(x, y, gridCellSize, gridCellSize);
-        g.setColor(Color.BLACK); 
+        g.setColor(Color.BLACK);
         g.drawRect(x, y, gridCellSize, gridCellSize);
     }
     
