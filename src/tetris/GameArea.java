@@ -331,58 +331,7 @@ public class GameArea extends JPanel
             }
         }
     }
-    
-    private void drawGhost(Graphics g)
-    {
-        int ghostY = block.getY();
-
-        while (true)
-        {
-            boolean blocked = false;
-
-            for (int row = 0; row < block.getHeight(); row++)
-            {
-                for (int col = 0; col < block.getWidth(); col++)
-                {
-                    if (block.getShape()[row][col] != 0)
-                    {
-                        int x = block.getX() + col;
-                        int y = ghostY + row + 1;
-
-                        if (y >= gridRows || 
-                            (y >= 0 && background[y][x] != null))
-                        {
-                            blocked = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (blocked) break;
-            }
-
-            if (blocked) break;
-
-            ghostY++;
-        }
-
-        int[][] shape = block.getShape();
-
-        for (int row = 0; row < block.getHeight(); row++)
-        {
-            for (int col = 0; col < block.getWidth(); col++)
-            {
-                if (shape[row][col] != 0)
-                {
-                    int x = (block.getX() + col) * gridCellSize;
-                    int y = (ghostY + row) * gridCellSize;
-
-                    g.drawRect(x, y, gridCellSize, gridCellSize);
-                }
-            }
-        }
-    }
-    
+  
     private void drawBackground(Graphics g)
     {
         Color color;
@@ -418,7 +367,6 @@ public class GameArea extends JPanel
         super.paintComponent(g);
         
         drawBackground(g);
-        drawGhost(g);
         drawBlock(g);
     }
 }
