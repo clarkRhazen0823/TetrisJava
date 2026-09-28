@@ -30,10 +30,10 @@ public class GameForm extends JFrame
         InputMap iMap = getRootPane().getInputMap();
         ActionMap aMap = getRootPane().getActionMap();
         
-        iMap.put(KeyStroke.getKeyStroke("RIGHT"), "right");
-        iMap.put(KeyStroke.getKeyStroke("LEFT"), "left");
-        iMap.put(KeyStroke.getKeyStroke("UP"), "up");
-        iMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
+        iMap.put(KeyStroke.getKeyStroke("D"), "right");
+        iMap.put(KeyStroke.getKeyStroke("A"), "left");
+        iMap.put(KeyStroke.getKeyStroke("W"), "up");
+        iMap.put(KeyStroke.getKeyStroke("S"), "down");
         
         aMap.put("right", new AbstractAction(){
             @Override
