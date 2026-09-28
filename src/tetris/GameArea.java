@@ -2,9 +2,7 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Random;
 import javax.swing.JPanel;
-import tetrominoes.*;
 
 public class GameArea extends JPanel
 {
@@ -14,8 +12,6 @@ public class GameArea extends JPanel
     private Color[][] background;
     
     private TetrisBlock block;
-    
-    private TetrisBlock[] blocks ;
     
     public GameArea(JPanel placeholder, int columns)
     {
@@ -29,22 +25,11 @@ public class GameArea extends JPanel
         gridRows = this.getBounds().height / gridCellSize; 
         
         background = new Color[gridRows][gridColumns];
-        
-        blocks = new TetrisBlock[]{new IShape(),
-                                   new JShape(), 
-                                   new LShape(), 
-                                   new OShape(), 
-                                   new SShape(), 
-                                   new TShape(), 
-                                   new ZShape()
-        };
-     }
+    }
     
     public void spawnBlock()
     {
-        Random random = new Random();
-        
-        block = blocks[ random.nextInt( blocks.length ) ];
+        block = new TetrisBlock( new int[][]{ {1, 0},{1, 0},{1, 1} }, Color.BLUE );
         block.spawn(gridColumns);
     }
     
@@ -104,61 +89,11 @@ public class GameArea extends JPanel
     
     public void rotateBlock()
     {
-        if (block == null) return;
-
-        // Save initial coordinates before rotation
-        int oldX = block.getX();
-        int oldY = block.getY();
-
-        // 1. Rotate block
+        if ( block == null ) return;
         block.rotate();
-
-        // 2. Adjust boundaries (wall / floor kicks)
-        if (block.getLeftEdge() < 0) block.setX(0);
-        if (block.getRightEdge() >= gridColumns) block.setX(gridColumns - block.getWidth());
-        if (block.getBottomEdge() >= gridRows) block.setY(gridRows - block.getHeight());
-
-        // 3. Check for background overlaps
-        if (checkOverlap())
-        {
-            // Revert position and rotation if overlapping existing blocks
-            block.setX(oldX);
-            block.setY(oldY);
-            block.unrotate(); // or call block.rotate() 3 times
-            return;
-        }
-
         repaint();
     }
     
-    private boolean checkOverlap()
-    {
-        int[][] shape = block.getShape();
-        int w = block.getWidth();
-        int h = block.getHeight();
-
-        for (int r = 0; r < h; r++) 
-        {
-            for (int c = 0; c < w; c++) 
-            {
-                if (shape[r][c] != 0) 
-                {
-                    int x = c + block.getX();
-                    int y = r + block.getY();
-
-                    // If block extends above board during spawn, ignore top boundary checks
-                    if (y < 0) continue;
-
-                    // Check background cell collision
-                    if (background[y][x] != null) 
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
     
     private boolean checkBottom()
     {
@@ -312,7 +247,11 @@ public class GameArea extends JPanel
             {
                 if (shape[r][c] == 1)
                 {
-                    background[r + yPos][c + xPos] = color;
+                    int boardY = r + yPos;
+                    if (boardY >= 0) 
+                    {
+                        background[boardY][c + xPos] = color;
+                    }
                 }
             }
         }
