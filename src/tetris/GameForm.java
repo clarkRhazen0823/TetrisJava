@@ -73,7 +73,17 @@ public class GameForm extends JFrame
     
     public void startGame()
     {
-        new GameThread(ga).start();
+        new GameThread(ga, this).start();
+    }
+    
+    public void updateScore(int score)
+    {
+        scoreValue.setText(score + "");
+    }
+    
+    public void updateLvl(int level)
+    {
+        levelValue.setText(level + "");
     }
 
     @SuppressWarnings("unchecked")
@@ -81,47 +91,121 @@ public class GameForm extends JFrame
     private void initComponents() {
 
         gameAreaCanvas = new javax.swing.JPanel();
+        dashPanelRight = new javax.swing.JPanel();
+        btnPause = new javax.swing.JButton();
+        scoreLabel = new java.awt.Label();
+        lvlLabel = new java.awt.Label();
+        scoreValue = new javax.swing.JLabel();
+        levelValue = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("TETRIS");
         setBackground(new java.awt.Color(0, 0, 0));
-        setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         setResizable(false);
 
-        gameAreaCanvas.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        gameAreaCanvas.setBackground(new java.awt.Color(0, 0, 0));
+        gameAreaCanvas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        gameAreaCanvas.setForeground(new java.awt.Color(255, 255, 255));
         gameAreaCanvas.setToolTipText("");
-        gameAreaCanvas.setPreferredSize(new java.awt.Dimension(320, 640));
+        gameAreaCanvas.setMaximumSize(new java.awt.Dimension(250, 500));
+        gameAreaCanvas.setMinimumSize(new java.awt.Dimension(250, 500));
+        gameAreaCanvas.setPreferredSize(new java.awt.Dimension(250, 500));
 
         javax.swing.GroupLayout gameAreaCanvasLayout = new javax.swing.GroupLayout(gameAreaCanvas);
         gameAreaCanvas.setLayout(gameAreaCanvasLayout);
         gameAreaCanvasLayout.setHorizontalGroup(
             gameAreaCanvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 316, Short.MAX_VALUE)
+            .addGap(0, 248, Short.MAX_VALUE)
         );
         gameAreaCanvasLayout.setVerticalGroup(
             gameAreaCanvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 636, Short.MAX_VALUE)
+            .addGap(0, 498, Short.MAX_VALUE)
+        );
+
+        dashPanelRight.setBackground(new java.awt.Color(0, 0, 0));
+        dashPanelRight.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        dashPanelRight.setForeground(new java.awt.Color(255, 255, 255));
+        dashPanelRight.setMaximumSize(new java.awt.Dimension(150, 500));
+        dashPanelRight.setMinimumSize(new java.awt.Dimension(150, 500));
+        dashPanelRight.setPreferredSize(new java.awt.Dimension(150, 500));
+
+        btnPause.setBackground(new java.awt.Color(51, 51, 51));
+        btnPause.setForeground(new java.awt.Color(255, 255, 255));
+        btnPause.setText("PAUSE");
+        btnPause.addActionListener(this::btnPauseActionPerformed);
+
+        scoreLabel.setAlignment(java.awt.Label.CENTER);
+        scoreLabel.setForeground(new java.awt.Color(255, 255, 255));
+        scoreLabel.setText("SCORE");
+
+        lvlLabel.setAlignment(java.awt.Label.CENTER);
+        lvlLabel.setForeground(new java.awt.Color(255, 255, 255));
+        lvlLabel.setText("LEVEL");
+
+        scoreValue.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        scoreValue.setForeground(new java.awt.Color(255, 255, 255));
+        scoreValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        scoreValue.setText("0");
+
+        levelValue.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        levelValue.setForeground(new java.awt.Color(255, 255, 255));
+        levelValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        levelValue.setText("1");
+
+        javax.swing.GroupLayout dashPanelRightLayout = new javax.swing.GroupLayout(dashPanelRight);
+        dashPanelRight.setLayout(dashPanelRightLayout);
+        dashPanelRightLayout.setHorizontalGroup(
+            dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dashPanelRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPause, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scoreLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lvlLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scoreValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(levelValue, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        dashPanelRightLayout.setVerticalGroup(
+            dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dashPanelRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(scoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(scoreValue)
+                .addGap(30, 30, 30)
+                .addComponent(lvlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(levelValue)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 331, Short.MAX_VALUE)
+                .addComponent(btnPause)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(gameAreaCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(314, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(dashPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(74, Short.MAX_VALUE)
-                .addComponent(gameAreaCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(gameAreaCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(dashPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPauseActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -146,6 +230,12 @@ public class GameForm extends JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPause;
+    private javax.swing.JPanel dashPanelRight;
     private javax.swing.JPanel gameAreaCanvas;
+    private javax.swing.JLabel levelValue;
+    private java.awt.Label lvlLabel;
+    private java.awt.Label scoreLabel;
+    private javax.swing.JLabel scoreValue;
     // End of variables declaration//GEN-END:variables
 }
