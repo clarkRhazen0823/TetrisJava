@@ -2,7 +2,6 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Random;
 import javax.swing.JPanel;
 import tetrominoes.*;
 
@@ -12,18 +11,22 @@ public class GameArea extends JPanel
     private int gridColumns;
     private int gridCellSize;
     private Color[][] background;
-    private Random rdm = new Random();
-    
     private TetrisBlock nextBlock;
     private TetrisBlock block;
     private TetrisBlock[] tetrominoes;
+    private int[] bag = new int[7];
+    private int bagPointer = 7;
+    private JPanel nextPanelRef;
+
     
-    public GameArea(JPanel placeholder, int columns)
+    public GameArea(JPanel placeholder, JPanel nextPanel,int columns) //CONSTRUCTOR
     {
         placeholder.setVisible(false);
         this.setBounds(placeholder.getBounds());
         this.setBackground(placeholder.getBackground());
         this.setBorder(placeholder.getBorder());
+        
+        this.nextPanelRef = nextPanel;
         
         gridColumns = columns;
         gridCellSize = this.getBounds().width / gridColumns;
@@ -32,13 +35,88 @@ public class GameArea extends JPanel
         background = new Color[gridRows][gridColumns];
         
         tetrominoes = new TetrisBlock[]{new IShape(), new JShape(), new LShape(), new OShape(), new SShape(), new TShape(), new ZShape()};
+        
+        this.nextPanelRef.add(new javax.swing.JComponent() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (nextBlock == null) return;
+
+                int[][] shape = nextBlock.getShape();
+                int h = nextBlock.getHeight();
+                int w = nextBlock.getWidth();
+                Color c = nextBlock.getColor();
+
+                int cellSize = 20; 
+                int startX = (100 - (w * cellSize)) / 2;
+                int startY = (100 - (h * cellSize)) / 2;
+
+                for (int row = 0; row < h; row++) {
+                    for (int col = 0; col < w; col++) {
+                        if (shape[row][col] == 1) {
+                            int x = startX + (col * cellSize);
+                            int y = startY + (row * cellSize);
+
+                            g.setColor(c);
+                            g.fillRect(x, y, cellSize, cellSize);
+                            g.setColor(Color.BLACK);
+                            g.drawRect(x, y, cellSize, cellSize);
+                        }
+                    }
+                }
+            }
+        });
+        this.nextPanelRef.getComponent(0).setBounds(0, 0, 100, 100);
     }
     
-    public void spawnBlock()
+        public void spawnBlock()
     {
-        block = tetrominoes[rdm.nextInt(tetrominoes.length)];
+        if (nextBlock == null)
+        {
+            if (bagPointer >= bag.length) refillTraditionalBag();
+            nextBlock = tetrominoes[bag[bagPointer]];
+            bagPointer++;
+        }
+
+        block = nextBlock;
         block.spawn(gridColumns);
+
+        if (bagPointer >= bag.length)
+        {
+            refillTraditionalBag();
+        }
+        int nextPieceIndex = bag[bagPointer];
+        bagPointer++;
+
+        nextBlock = tetrominoes[nextPieceIndex];
+
+        if (nextPanelRef != null)
+        {
+            nextPanelRef.repaint();
+        }
     }
+
+
+    
+    private void refillTraditionalBag()
+    {
+        for (int i = 0; i < bag.length; i++)
+        {
+            bag[i] = i;
+        }
+
+        for (int i = bag.length - 1; i > 0; i--)
+        {
+            int j = (int)(Math.random() * (i + 1));
+
+            int temp = bag[i];
+            bag[i] = bag[j];
+            bag[j] = temp;
+        }
+
+        bagPointer = 0;
+    }
+
     
     public boolean checkOutOfBounds()
     {

@@ -10,7 +10,7 @@ public class TetrisBlock
     private int[][][] shapes;
     private int currentRotation;
     
-    public TetrisBlock(int[][] shape, Color color)
+    public TetrisBlock(int[][] shape, Color color) //CONSTRUCTOR
     {
         this.shape = shape;
         this.color = color;

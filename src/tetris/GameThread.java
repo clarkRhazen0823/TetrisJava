@@ -20,9 +20,12 @@ public class GameThread extends Thread
     @Override
     public void run()
     {        
+        // Spawn the first block before entering the loop to establish the game state
+        ga.spawnBlock();
+        
         while(true)
         {
-            ga.spawnBlock();
+            // Keep shifting the piece downwards until it meets an obstacle
             while ( ga.moveBlockDown() )
             {
                 try 
@@ -31,17 +34,22 @@ public class GameThread extends Thread
                 } 
                 catch (InterruptedException ex) 
                 {
-                    System.getLogger(GameThread.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    // Classic standard output fallback handling
+                    ex.printStackTrace();
                 }
             }
             
+            // The block is locked; place it permanently into the matrix grid
+            ga.moveBlockToBackground();
+            
+            // Evaluate the Game Over criteria immediately upon landing
             if (ga.checkOutOfBounds())
             {
                 System.out.println("<<========== GAME OVER ==========>>");
                 break;
             }
             
-            ga.moveBlockToBackground();
+            // Clear filled segments and update metrics counters
             lines += ga.clearLines();
             gf.updateScore(lines);
             
@@ -50,9 +58,11 @@ public class GameThread extends Thread
             {
                 level = lvl;
                 gf.updateLvl(level);
-               if (tickRate > 100) tickRate -= speedPerLvl;
+                if (tickRate > 100) tickRate -= speedPerLvl;
             }
+            
+            // Spawn the next piece from our customized randomizer pool
+            ga.spawnBlock();
         }
-
     }
 }
