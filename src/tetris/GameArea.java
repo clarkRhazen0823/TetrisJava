@@ -11,22 +11,28 @@ public class GameArea extends JPanel
     private int gridColumns;
     private int gridCellSize;
     private Color[][] background;
-    private TetrisBlock nextBlock;
+    
+    private TetrisBlock[] nextBlocks = new TetrisBlock[3];
+    private JPanel nextPanelRef1;
+    private JPanel nextPanelRef2;
+    private JPanel nextPanelRef3;
+
     private TetrisBlock block;
     private TetrisBlock[] tetrominoes;
     private int[] bag = new int[7];
     private int bagPointer = 7;
-    private JPanel nextPanelRef;
 
     
-    public GameArea(JPanel placeholder, JPanel nextPanel,int columns) //CONSTRUCTOR
+    public GameArea(JPanel placeholder, JPanel next1, JPanel next2, JPanel next3, int columns) //CONSTRUCTOR
     {
         placeholder.setVisible(false);
         this.setBounds(placeholder.getBounds());
         this.setBackground(placeholder.getBackground());
         this.setBorder(placeholder.getBorder());
         
-        this.nextPanelRef = nextPanel;
+        this.nextPanelRef1 = next1;
+        this.nextPanelRef2 = next2;
+        this.nextPanelRef3 = next3;
         
         gridColumns = columns;
         gridCellSize = this.getBounds().width / gridColumns;
@@ -36,17 +42,32 @@ public class GameArea extends JPanel
         
         tetrominoes = new TetrisBlock[]{new IShape(), new JShape(), new LShape(), new OShape(), new SShape(), new TShape(), new ZShape()};
         
-        this.nextPanelRef.add(new javax.swing.JComponent() {
+        // Hook up custom traditional drawing canvas to Panel 1
+        setupPreviewCanvas(this.nextPanelRef1, 0);
+        // Hook up custom traditional drawing canvas to Panel 2
+        setupPreviewCanvas(this.nextPanelRef2, 1);
+        // Hook up custom traditional drawing canvas to Panel 3
+        setupPreviewCanvas(this.nextPanelRef3, 2);
+    }
+    
+        private void setupPreviewCanvas(JPanel panel, final int previewIndex)
+    {
+        if (panel == null) return;
+        
+        panel.add(new javax.swing.JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if (nextBlock == null) return;
+                
+                // Read from the specific index slot in our preview array
+                if (nextBlocks[previewIndex] == null) return;
 
-                int[][] shape = nextBlock.getShape();
-                int h = nextBlock.getHeight();
-                int w = nextBlock.getWidth();
-                Color c = nextBlock.getColor();
+                int[][] shape = nextBlocks[previewIndex].getShape();
+                int h = nextBlocks[previewIndex].getHeight();
+                int w = nextBlocks[previewIndex].getWidth();
+                Color c = nextBlocks[previewIndex].getColor();
 
+                // Centering math inside 100x100 panel bounds
                 int cellSize = 20; 
                 int startX = (100 - (w * cellSize)) / 2;
                 int startY = (100 - (h * cellSize)) / 2;
@@ -66,35 +87,44 @@ public class GameArea extends JPanel
                 }
             }
         });
-        this.nextPanelRef.getComponent(0).setBounds(0, 0, 100, 100);
+        panel.getComponent(0).setBounds(0, 0, 100, 100);
     }
-    
-        public void spawnBlock()
+
+    public void spawnBlock()
     {
-        if (nextBlock == null)
+        // 1. Initial setup check: If the queue is entirely empty (first run), populate all 3 look-ahead slots
+        if (nextBlocks[0] == null)
         {
-            if (bagPointer >= bag.length) refillTraditionalBag();
-            nextBlock = tetrominoes[bag[bagPointer]];
-            bagPointer++;
+            for (int i = 0; i < 3; i++)
+            {
+                if (bagPointer >= bag.length) refillTraditionalBag();
+                nextBlocks[i] = tetrominoes[bag[bagPointer]];
+                bagPointer++;
+            }
         }
 
-        block = nextBlock;
+        // 2. The immediate upcoming block (slot 0) becomes your active falling piece
+        block = nextBlocks[0];
         block.spawn(gridColumns);
 
+        // 3. Shift the entire remaining preview queue forward manually
+        nextBlocks[0] = nextBlocks[1];
+        nextBlocks[1] = nextBlocks[2];
+
+        // 4. Draw a fresh block index from your 7-bag to fill the empty back slot (slot 2)
         if (bagPointer >= bag.length)
         {
             refillTraditionalBag();
         }
-        int nextPieceIndex = bag[bagPointer];
+        nextBlocks[2] = tetrominoes[bag[bagPointer]];
         bagPointer++;
 
-        nextBlock = tetrominoes[nextPieceIndex];
-
-        if (nextPanelRef != null)
-        {
-            nextPanelRef.repaint();
-        }
+        // 5. Force all 3 sidebar layouts to clear and draw their updated shapes
+        if (nextPanelRef1 != null) nextPanelRef1.repaint();
+        if (nextPanelRef2 != null) nextPanelRef2.repaint();
+        if (nextPanelRef3 != null) nextPanelRef3.repaint();
     }
+
 
 
     
