@@ -116,6 +116,7 @@ public class GameForm extends JFrame
         nextPanel1 = new javax.swing.JPanel();
         nextPanel2 = new javax.swing.JPanel();
         nextPanel3 = new javax.swing.JPanel();
+        scoreLabel1 = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TETRIS");
@@ -147,7 +148,7 @@ public class GameForm extends JFrame
         dashPanelRight.setForeground(new java.awt.Color(255, 255, 255));
         dashPanelRight.setMaximumSize(new java.awt.Dimension(150, 500));
         dashPanelRight.setMinimumSize(new java.awt.Dimension(150, 500));
-        dashPanelRight.setPreferredSize(new java.awt.Dimension(150, 500));
+        dashPanelRight.setPreferredSize(new java.awt.Dimension(120, 500));
 
         btnPause.setBackground(new java.awt.Color(51, 51, 51));
         btnPause.setForeground(new java.awt.Color(255, 255, 255));
@@ -157,20 +158,23 @@ public class GameForm extends JFrame
         btnPause.addActionListener(this::btnPauseActionPerformed);
 
         scoreLabel.setAlignment(java.awt.Label.CENTER);
+        scoreLabel.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         scoreLabel.setForeground(new java.awt.Color(255, 255, 255));
         scoreLabel.setText("SCORE");
 
         lvlLabel.setAlignment(java.awt.Label.CENTER);
+        lvlLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        lvlLabel.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         lvlLabel.setForeground(new java.awt.Color(255, 255, 255));
         lvlLabel.setText("LEVEL");
 
-        scoreValue.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        scoreValue.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         scoreValue.setForeground(new java.awt.Color(255, 255, 255));
         scoreValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         scoreValue.setText("0");
         scoreValue.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 51, 51), 1, true));
 
-        levelValue.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        levelValue.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         levelValue.setForeground(new java.awt.Color(255, 255, 255));
         levelValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         levelValue.setText("1");
@@ -221,34 +225,41 @@ public class GameForm extends JFrame
             .addGap(0, 98, Short.MAX_VALUE)
         );
 
+        scoreLabel1.setAlignment(java.awt.Label.CENTER);
+        scoreLabel1.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+        scoreLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        scoreLabel1.setText("NEXT");
+
         javax.swing.GroupLayout dashPanelRightLayout = new javax.swing.GroupLayout(dashPanelRight);
         dashPanelRight.setLayout(dashPanelRightLayout);
         dashPanelRightLayout.setHorizontalGroup(
             dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dashPanelRightLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(levelValue, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lvlLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scoreLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nextPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nextPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nextPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scoreValue, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPause, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(levelValue, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lvlLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(scoreLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                        .addComponent(nextPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nextPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nextPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(scoreValue, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(scoreLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         dashPanelRightLayout.setVerticalGroup(
             dashPanelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dashPanelRightLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(scoreLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(nextPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(nextPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(nextPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
+                .addGap(24, 24, 24)
                 .addComponent(scoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(scoreValue)
@@ -256,9 +267,9 @@ public class GameForm extends JFrame
                 .addComponent(lvlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(levelValue)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPause)
-                .addContainerGap(5, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -268,7 +279,7 @@ public class GameForm extends JFrame
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(gameAreaCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(dashPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dashPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
@@ -317,6 +328,7 @@ public class GameForm extends JFrame
     private javax.swing.JPanel nextPanel2;
     private javax.swing.JPanel nextPanel3;
     private java.awt.Label scoreLabel;
+    private java.awt.Label scoreLabel1;
     private javax.swing.JLabel scoreValue;
     // End of variables declaration//GEN-END:variables
 }
