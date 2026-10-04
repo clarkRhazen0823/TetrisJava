@@ -23,30 +23,28 @@ public class GameArea extends JPanel
     private int bagPointer = 7;
 
     
-    public GameArea(JPanel placeholder, JPanel next1, JPanel next2, JPanel next3, int columns) //CONSTRUCTOR
+    public GameArea(JPanel placeholder, JPanel next1, JPanel next2, JPanel next3, int columns) 
     {
-        placeholder.setVisible(false);
-        this.setBounds(placeholder.getBounds());
+        // Apply placeholder background and border properties
         this.setBackground(placeholder.getBackground());
         this.setBorder(placeholder.getBorder());
-        
+
         this.nextPanelRef1 = next1;
         this.nextPanelRef2 = next2;
         this.nextPanelRef3 = next3;
-        
+
         gridColumns = columns;
-        gridCellSize = this.getBounds().width / gridColumns;
-        gridRows = this.getBounds().height / gridCellSize; 
-        
+
+        // Calculate cell sizes based on the preferred size of the placeholder panel
+        gridCellSize = placeholder.getPreferredSize().width / gridColumns;
+        gridRows = placeholder.getPreferredSize().height / gridCellSize; 
+
         background = new Color[gridRows][gridColumns];
-        
+
         tetrominoes = new TetrisBlock[]{new IShape(), new JShape(), new LShape(), new OShape(), new SShape(), new TShape(), new ZShape()};
-        
-        // Hook up custom traditional drawing canvas to Panel 1
+
         setupPreviewCanvas(this.nextPanelRef1, 0);
-        // Hook up custom traditional drawing canvas to Panel 2
         setupPreviewCanvas(this.nextPanelRef2, 1);
-        // Hook up custom traditional drawing canvas to Panel 3
         setupPreviewCanvas(this.nextPanelRef3, 2);
     }
     
