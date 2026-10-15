@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 public class GameForm extends JFrame 
 {
     private GameArea ga;
+    private GameThread gt;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GameForm.class.getName());
 
@@ -82,6 +83,10 @@ public class GameForm extends JFrame
             public void actionPerformed(ActionEvent e) 
             {
                 ga.hardDrop();
+                if (gt != null) 
+                {
+                    gt.interrupt(); 
+                }
             }        
         });
         
@@ -89,7 +94,8 @@ public class GameForm extends JFrame
     
     public void startGame()
     {
-        new GameThread(ga, this).start();
+    gt = new GameThread(ga, this);
+    gt.start();
     }
     
     public void updateScore(int score)

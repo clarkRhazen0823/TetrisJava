@@ -18,7 +18,6 @@ public class GameArea extends JPanel
     private JPanel nextPanelRef3;
 
     private TetrisBlock block;
-    private TetrisBlock[] tetrominoes;
     private int[] bag = new int[7];
     private int bagPointer = 7;
 
@@ -41,14 +40,27 @@ public class GameArea extends JPanel
 
         background = new Color[gridRows][gridColumns];
 
-        tetrominoes = new TetrisBlock[]{new IShape(), new JShape(), new LShape(), new OShape(), new SShape(), new TShape(), new ZShape()};
-
         setupPreviewCanvas(this.nextPanelRef1, 0);
         setupPreviewCanvas(this.nextPanelRef2, 1);
         setupPreviewCanvas(this.nextPanelRef3, 2);
     }
     
-        private void setupPreviewCanvas(JPanel panel, final int previewIndex)
+    private TetrisBlock getNewBlock(int blockType)
+    {
+        switch(blockType)
+        {
+            case 0: return new IShape();
+            case 1: return new JShape();
+            case 2: return new LShape();
+            case 3: return new OShape();
+            case 4: return new SShape();
+            case 5: return new TShape();
+            case 6: return new ZShape();
+            default: return new TShape();
+        }
+    }
+    
+    private void setupPreviewCanvas(JPanel panel, final int previewIndex)
     {
         if (panel == null) return;
         
@@ -90,13 +102,13 @@ public class GameArea extends JPanel
 
     public void spawnBlock()
     {
-        // 1. Initial setup check: If the queue is entirely empty (first run), populate all 3 look-ahead slots
+        // 1. Initial setup check
         if (nextBlocks[0] == null)
         {
             for (int i = 0; i < 3; i++)
             {
                 if (bagPointer >= bag.length) refillTraditionalBag();
-                nextBlocks[i] = tetrominoes[bag[bagPointer]];
+                nextBlocks[i] = getNewBlock(bag[bagPointer]); // Generate new instance
                 bagPointer++;
             }
         }
@@ -109,22 +121,28 @@ public class GameArea extends JPanel
         nextBlocks[0] = nextBlocks[1];
         nextBlocks[1] = nextBlocks[2];
 
-        // 4. Draw a fresh block index from your 7-bag to fill the empty back slot (slot 2)
+        // 4. Draw a fresh block index to fill the empty back slot (slot 2)
         if (bagPointer >= bag.length)
         {
             refillTraditionalBag();
         }
-        nextBlocks[2] = tetrominoes[bag[bagPointer]];
+        nextBlocks[2] = getNewBlock(bag[bagPointer]); // Generate new instance
         bagPointer++;
 
         // 5. Force all 3 sidebar layouts to clear and draw their updated shapes
-        if (nextPanelRef1 != null) nextPanelRef1.repaint();
-        if (nextPanelRef2 != null) nextPanelRef2.repaint();
-        if (nextPanelRef3 != null) nextPanelRef3.repaint();
+        if (nextPanelRef1 != null) {
+            nextPanelRef1.repaint();
+            if (nextPanelRef1.getComponentCount() > 0) nextPanelRef1.getComponent(0).repaint();
+        }
+        if (nextPanelRef2 != null) {
+            nextPanelRef2.repaint();
+            if (nextPanelRef2.getComponentCount() > 0) nextPanelRef2.getComponent(0).repaint();
+        }
+        if (nextPanelRef3 != null) {
+            nextPanelRef3.repaint();
+            if (nextPanelRef3.getComponentCount() > 0) nextPanelRef3.getComponent(0).repaint();
+        }
     }
-
-
-
     
     private void refillTraditionalBag()
     {
@@ -190,20 +208,18 @@ public class GameArea extends JPanel
 
     }
     
-    public boolean hardDrop()
+    public void hardDrop()
     {
-        if (block == null) return false;
+        if (block == null) return;
         
         while(checkBottom())
         {
             block.moveDown();
         }
         
-        moveBlockToBackground();
+//        moveBlockToBackground();
         repaint();
-        
-        return true;
-    }    
+        }    
     
     public void rotateBlock()
     {

@@ -35,7 +35,7 @@ public class GameThread extends Thread
                 catch (InterruptedException ex) 
                 {
                     // Classic standard output fallback handling
-                    ex.printStackTrace();
+                    // ex.printStackTrace();
                 }
             }
             
