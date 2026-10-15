@@ -20,49 +20,43 @@ public class GameThread extends Thread
     @Override
     public void run()
     {        
-        // Spawn the first block before entering the loop to establish the game state
         ga.spawnBlock();
         
         while(true)
         {
-            // Keep shifting the piece downwards until it meets an obstacle
-            while ( ga.moveBlockDown() )
+            try 
             {
-                try 
+                Thread.sleep(tickRate);
+            } 
+            catch (InterruptedException ex) 
+            {
+                // Interrupted by drop/lock action
+            }
+            
+            // Move block down 1 step; if it cannot move down, lock and spawn
+            if (!ga.moveBlockDown())
+            {
+                ga.moveBlockToBackground();
+                
+                if (ga.checkOutOfBounds())
                 {
-                    Thread.sleep(tickRate);
-                } 
-                catch (InterruptedException ex) 
-                {
-                    // Classic standard output fallback handling
-                    // ex.printStackTrace();
+                    System.out.println("<<========== GAME OVER ==========>>");
+                    break;
                 }
+                
+                lines += ga.clearLines();
+                gf.updateScore(lines);
+                
+                int lvl = lines / linesPerLvl + 1;
+                if (lvl > level)
+                {
+                    level = lvl;
+                    gf.updateLvl(level);
+                    if (tickRate > 100) tickRate -= speedPerLvl;
+                }
+                
+                ga.spawnBlock();
             }
-            
-            // The block is locked; place it permanently into the matrix grid
-            ga.moveBlockToBackground();
-            
-            // Evaluate the Game Over criteria immediately upon landing
-            if (ga.checkOutOfBounds())
-            {
-                System.out.println("<<========== GAME OVER ==========>>");
-                break;
-            }
-            
-            // Clear filled segments and update metrics counters
-            lines += ga.clearLines();
-            gf.updateScore(lines);
-            
-            int lvl = lines / linesPerLvl + 1;
-            if (lvl > level)
-            {
-                level = lvl;
-                gf.updateLvl(level);
-                if (tickRate > 100) tickRate -= speedPerLvl;
-            }
-            
-            // Spawn the next piece from our customized randomizer pool
-            ga.spawnBlock();
         }
     }
 }

@@ -7,7 +7,7 @@ public class IShape extends TetrisBlock
 {
     public IShape()
     {
-        super( new int[][]{ {1, 1, 1, 1} }, Color.CYAN );
+        super( new int[][]{ {1, 1, 1, 1} }, Color.GREEN);
     }
     
     @Override

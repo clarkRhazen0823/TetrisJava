@@ -12,25 +12,20 @@ public class GameArea extends JPanel
     private int gridCellSize;
     private Color[][] background;
     
-    private TetrisBlock[] nextBlocks = new TetrisBlock[3];
-    private JPanel nextPanelRef1;
-    private JPanel nextPanelRef2;
-    private JPanel nextPanelRef3;
+    private TetrisBlock[] nextBlocks = new TetrisBlock[2];
+    private JPanel nextPanelRef;
 
     private TetrisBlock block;
     private int[] bag = new int[7];
     private int bagPointer = 7;
 
-    
-    public GameArea(JPanel placeholder, JPanel next1, JPanel next2, JPanel next3, int columns) 
+    public GameArea(JPanel placeholder, JPanel next, int columns) 
     {
         // Apply placeholder background and border properties
         this.setBackground(placeholder.getBackground());
         this.setBorder(placeholder.getBorder());
 
-        this.nextPanelRef1 = next1;
-        this.nextPanelRef2 = next2;
-        this.nextPanelRef3 = next3;
+        this.nextPanelRef = next;
 
         gridColumns = columns;
 
@@ -40,9 +35,7 @@ public class GameArea extends JPanel
 
         background = new Color[gridRows][gridColumns];
 
-        setupPreviewCanvas(this.nextPanelRef1, 0);
-        setupPreviewCanvas(this.nextPanelRef2, 1);
-        setupPreviewCanvas(this.nextPanelRef3, 2);
+        setupPreviewCanvas(this.nextPanelRef, 0);
     }
     
     private TetrisBlock getNewBlock(int blockType)
@@ -64,12 +57,13 @@ public class GameArea extends JPanel
     {
         if (panel == null) return;
         
+        panel.setLayout(new java.awt.BorderLayout());
+        
         panel.add(new javax.swing.JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 
-                // Read from the specific index slot in our preview array
                 if (nextBlocks[previewIndex] == null) return;
 
                 int[][] shape = nextBlocks[previewIndex].getShape();
@@ -77,10 +71,10 @@ public class GameArea extends JPanel
                 int w = nextBlocks[previewIndex].getWidth();
                 Color c = nextBlocks[previewIndex].getColor();
 
-                // Centering math inside 100x100 panel bounds
+                // Dynamically center within the panel's actual dimensions
                 int cellSize = 20; 
-                int startX = (100 - (w * cellSize)) / 2;
-                int startY = (100 - (h * cellSize)) / 2;
+                int startX = (getWidth() - (w * cellSize)) / 2;
+                int startY = (getHeight() - (h * cellSize)) / 2;
 
                 for (int row = 0; row < h; row++) {
                     for (int col = 0; col < w; col++) {
@@ -96,8 +90,7 @@ public class GameArea extends JPanel
                     }
                 }
             }
-        });
-        panel.getComponent(0).setBounds(0, 0, 100, 100);
+        }, java.awt.BorderLayout.CENTER);
     }
 
     public void spawnBlock()
@@ -105,42 +98,41 @@ public class GameArea extends JPanel
         // 1. Initial setup check
         if (nextBlocks[0] == null)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 if (bagPointer >= bag.length) refillTraditionalBag();
-                nextBlocks[i] = getNewBlock(bag[bagPointer]); // Generate new instance
+                nextBlocks[i] = getNewBlock(bag[bagPointer]);
                 bagPointer++;
             }
         }
 
-        // 2. The immediate upcoming block (slot 0) becomes your active falling piece
+        // 2. Active piece setup
         block = nextBlocks[0];
         block.spawn(gridColumns);
 
-        // 3. Shift the entire remaining preview queue forward manually
+        // 3. Shift queue
         nextBlocks[0] = nextBlocks[1];
-        nextBlocks[1] = nextBlocks[2];
 
-        // 4. Draw a fresh block index to fill the empty back slot (slot 2)
+        // 4. Refill back slot
         if (bagPointer >= bag.length)
         {
             refillTraditionalBag();
         }
-        nextBlocks[2] = getNewBlock(bag[bagPointer]); // Generate new instance
+        nextBlocks[1] = getNewBlock(bag[bagPointer]);
         bagPointer++;
 
-        // 5. Force all 3 sidebar layouts to clear and draw their updated shapes
-        if (nextPanelRef1 != null) {
-            nextPanelRef1.repaint();
-            if (nextPanelRef1.getComponentCount() > 0) nextPanelRef1.getComponent(0).repaint();
-        }
-        if (nextPanelRef2 != null) {
-            nextPanelRef2.repaint();
-            if (nextPanelRef2.getComponentCount() > 0) nextPanelRef2.getComponent(0).repaint();
-        }
-        if (nextPanelRef3 != null) {
-            nextPanelRef3.repaint();
-            if (nextPanelRef3.getComponentCount() > 0) nextPanelRef3.getComponent(0).repaint();
+        // 5. Instant synchronous repaint on Swing Event Dispatch Thread
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            refreshPreviewPanel(nextPanelRef);
+        });
+        
+        repaint();
+    }
+
+    private void refreshPreviewPanel(JPanel panel) {
+        if (panel != null) {
+            panel.revalidate();
+            panel.paintImmediately(0, 0, panel.getWidth(), panel.getHeight());
         }
     }
     
@@ -163,7 +155,6 @@ public class GameArea extends JPanel
         bagPointer = 0;
     }
 
-    
     public boolean checkOutOfBounds()
     {
         if (block.getY() < 0) 
@@ -179,7 +170,6 @@ public class GameArea extends JPanel
     {
         if (checkBottom() == false) 
         {
-            
             return false;
         }
         
@@ -217,9 +207,8 @@ public class GameArea extends JPanel
             block.moveDown();
         }
         
-//        moveBlockToBackground();
         repaint();
-        }    
+    }    
     
     public void rotateBlock()
     {
@@ -274,7 +263,6 @@ public class GameArea extends JPanel
 
         repaint();
     }
-    
     
     private boolean checkBottom()
     {

@@ -7,6 +7,6 @@ public class OShape extends TetrisBlock
 {
     public OShape()
     {
-        super(new int[][]{{1,1},{1,1}}, Color.YELLOW);
+        super(new int[][]{{1,1},{1,1}}, Color.GREEN);
     }
 }

@@ -46,7 +46,7 @@ public class TetrisBlock
         currentRotation = 0;
         shape = shapes[currentRotation];
         
-        y = -getHeight();
+        y = -1;
         x = ( gridWidth - getWidth() ) / 2;
     }
     
